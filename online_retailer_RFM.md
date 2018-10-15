@@ -37,7 +37,7 @@ Download the online retail dataset.
 ``` r
 url <- "https://archive.ics.uci.edu/ml/machine-learning-databases/00352/Online Retail.xlsx"
 destfile <- "Online Retail.xlsx"
-#download.file(url, destfile, mode="wb")
+download.file(url, destfile, mode="wb")
 ```
 
 Next we read the first sheet from the downloaded xlsx file with readxl.
