@@ -3,9 +3,9 @@
 This repo contains some of my own data analysis and machine learning projects carried as a hobby for training and learning purposes.
 
 
-## Online retail data analysis and RFM modelling
+## Data analysis and RFM modelling
 
-* [Test_report](/online_retailer_RFM.md).
+* [Online retail](/online_retailer_RFM.md).
 
 
 ## Binary Classification
