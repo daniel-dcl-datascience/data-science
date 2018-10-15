@@ -29,7 +29,7 @@ Country: Country name. Nominal, the name of the country where each customer resi
 First of all, we set the working directory.
 
 ``` r
-setwd("C:/Users/Daniel Del Castillo/Google Drive/Programacion/Projects/R/Online Retailer/")
+setwd("C:/Projects/R/Online Retailer/")
 ```
 
 Download the online retail dataset.
