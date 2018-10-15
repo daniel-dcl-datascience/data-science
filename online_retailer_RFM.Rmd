@@ -1,0 +1,320 @@
+---
+title: "Online retailer analysis and RFM modelling"
+author: "Daniel Del Castillo Llano"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+options(warn=-1)
+```
+
+### Summary
+
+In this end-to-end project we are going to find the group of customers that provide more value to the company and that we would target in a loyalty campaign. The approach used will be the RFM model. This model clusters customers based on their Recency, Frequency and Monetary values.
+
+
+### Data Source
+
+This is a transnational data set which contains all the transactions occurring between 01/12/2010 and 09/12/2011 for a UK-based and registered non-store online retail.The company mainly sells unique all-occasion gifts. Many customers of the company are wholesalers.
+
+
+### Variable information
+
+InvoiceNo: Invoice number. Nominal, a 6-digit integral number uniquely assigned to each transaction. If this code starts with letter 'c', it indicates a cancellation.
+
+StockCode: Product (item) code. Nominal, a 5-digit integral number uniquely assigned to each distinct product.
+
+Description: Product (item) name. Nominal.
+
+Quantity: The quantities of each product (item) per transaction. Numeric.
+
+InvoiceDate: Invoice Date and time. Numeric, the day and time when each transaction was generated.
+
+UnitPrice: Unit price. Numeric, Product price per unit in sterling.
+
+CustomerID: Customer number. Nominal, a 5-digit integral number uniquely assigned to each customer.
+
+Country: Country name. Nominal, the name of the country where each customer resides. 
+
+
+### Data extraction
+
+First of all, we set the working directory.
+
+```{r setwd}
+setwd("C:/Users/Daniel Del Castillo/Google Drive/Programacion/Projects/R/Online Retailer/")
+```
+
+Download the online retail dataset.
+
+```{r dwl}
+url <- "https://archive.ics.uci.edu/ml/machine-learning-databases/00352/Online Retail.xlsx"
+destfile <- "Online Retail.xlsx"
+#download.file(url, destfile, mode="wb")
+```
+
+Next we read the first sheet from the downloaded xlsx file with readxl.
+
+```{r read, message=FALSE}
+library(readxl)
+online_retail_data <- read_excel(paste(getwd(),
+                                       "/",
+                                       destfile, 
+                                       sep=""), 
+                                 sheet = 1, 
+                                 col_names = TRUE, 
+                                 col_types = NULL, 
+                                 na = "", 
+                                 skip = 0)
+```
+
+### Data analysis
+
+It is always a good idea making a copy of the original dataset, as we might need to check it back later.
+
+```{r 1}
+or_data <- online_retail_data
+```
+
+We should check if the dataset is consistent from the beginning to the end and have a first look at it.
+
+```{r 2}
+head(or_data)
+tail(or_data)
+```
+
+StockCode variable values do not seem to match the variable description as there are not only 5-digit integral numbers, but additional letters after. `skimr` package will show us a more detailed view of the features in the dataset.
+
+```{r 3, message=FALSE}
+library(skimr)
+skim_with(numeric = list(hist = NULL)) #hiddes histograms
+skim(or_data)
+```
+
+There are some missing descriptions, a small amount of the total dataset, so it should be safe to exclude it for the current analysis. A more careful approach should be taken with the CustomerID, as there are 135080 missing values. As the current analysis aims to segment the customers, we need to exclude those records. In a real life scenario, the reason of that should be carefully addressed, as it could dramatically bias the analysis.
+
+Negative values can be seen for Quantity and UnitPrice, what probably refers to returns.
+
+According to the data dictionary, the InvoiceNo that begin with "c" refer to cancellations. Lets check how many cases are like that () transforming the variable to lower case prior to the subsetting should prevent problems with upper/lower cases).
+
+```{r 4}
+sum(substr(tolower(or_data$InvoiceNo),1,1)=="c")
+```
+
+The current analysis shouldn't be highly affected by the exclusion of those. Lets also exclude all the other special cases in order to have a clean dataset.
+
+```{r 5}
+or_data <- or_data[!substr(tolower(or_data$InvoiceNo),1,1)=="C",]
+or_data <- or_data[or_data$Quantity>0,]
+or_data <- or_data[or_data$UnitPrice>0,]
+or_data <- or_data[!is.na(or_data$CustomerID),]
+or_data <- or_data[!is.na(or_data$Description),]
+```
+
+The number of 23260 unique date cases in a bit more than a year, looks like there are multiple purchases in different times of each day, lets round that, as we are not interested in what happens across the day. `lubridate` package makes working with dates an easier task.
+
+```{r 6, message=FALSE}
+library(lubridate)
+or_data$InvoiceDate <- round_date(or_data$InvoiceDate, unit="day")
+```
+
+Lets look again to our improved dataset.
+
+```{r 7}
+skim(or_data)
+```
+
+There are still some figures that look strange, for example, that the largest purchase was of 80995 items (of the same kind). 
+
+```{r 8}
+head(or_data[order(or_data$Quantity, decreasing = TRUE),], n = 20)
+```
+
+Looking at the largest purchases, there are two massive outlier records. Without a deeper knowledge from the company we can not guess if those values are right, therefore we are going to leave them there.
+
+By looking at the largest values from UnitPrice we can see postage and manual inputs.
+
+
+
+```{r 9}
+head(or_data[order(or_data$UnitPrice, decreasing = TRUE),], n = 20)
+```
+
+ Postage records should be excluded, as there are not a source of net income for the company.
+ 
+By looking at the smallest unit prices, some special records appear to.
+
+
+```{r 9.2}
+head(or_data[order(or_data$UnitPrice, decreasing = FALSE),], n = 20)
+```
+
+Values below 1p should be excluded.
+
+As we have seen, many StockCode records do not follow the data dictionary rules.
+
+```{r 10}
+head(unique(or_data[is.na(as.numeric(or_data$StockCode)),]$StockCode), n = 20)
+```
+
+Values with an appended letter look like variation of the same product. But some of them look like special records.
+
+```{r 11}
+or_data$StockCode_mod <- substr(or_data$StockCode, 1, 5)
+
+unique(or_data[is.na(as.numeric(or_data$StockCode_mod)),]$StockCode_mod)
+```
+
+Lets remove all the special cases apart from the manual inputs.
+
+```{r 12}
+or_data <- or_data[or_data$StockCode_mod!="POST",]
+or_data <- or_data[or_data$StockCode_mod!="C2",]
+or_data <- or_data[or_data$StockCode_mod!="BANK ",]
+or_data <- or_data[or_data$StockCode_mod!="PADS",]
+or_data <- or_data[or_data$StockCode_mod!="DOT",]
+
+or_data$StockCode_mod <- NULL
+```
+
+Lets go back again to the dataset summary.
+
+```{r 13}
+skim(or_data)
+```
+
+The values now look consistent and the dataset cleaner.
+
+Lets check the distribution of sales by country.
+
+```{r 14, message=FALSE}
+library(ggplot2)
+ggplot(data=or_data, 
+       aes(x=reorder(Country, 
+                Quantity, 
+                FUN = sum), 
+           y=Quantity))+
+  geom_bar(stat = "identity", 
+           fill="blue") +
+    coord_flip()
+```
+
+UK looks like the main market for the company. We will take sales only from that country, as mixing customer from different countries or cultures could lead to a biased analysis.
+
+```{r 15}
+or_data <- or_data[or_data$Country=="United Kingdom",]
+```
+
+We will use now the amazing `dplyr` to take a deeper look into the data. What are the best selling products?
+
+```{r 16, message=FALSE}
+library(dplyr)
+top15_prods_quant <- or_data %>%
+                      group_by(Description) %>%
+                      summarise(Quantity = sum(Quantity)) %>%
+                      top_n(15, Quantity) %>%
+                      arrange(desc(Quantity))
+
+ggplot(data=top15_prods_quant, 
+  aes(x=reorder(Description, 
+                Quantity, 
+                FUN = sum), 
+      y=Quantity)) +
+  geom_bar(stat="identity", fill="blue") + 
+  coord_flip()
+```
+
+And the ones that generate more income for the company?
+
+```{r 17}
+or_data$Value <- or_data$Quantity * or_data$UnitPrice
+
+top15_prods_val <- or_data %>%
+                    group_by(Description) %>%
+                    summarise(Value = sum(Value)) %>%
+                    top_n(15, Value) %>%
+                    arrange(desc(Value))
+
+ggplot(data=top15_prods_val, 
+  aes(x=reorder(Description, 
+                Value, 
+                FUN = sum), 
+     y=Value)) +
+  geom_bar(stat="identity", fill="blue") +
+  coord_flip()
+```
+
+What about the largest income generating customers?
+
+```{r 18}
+top15_customer_val <- or_data %>%
+                        group_by(CustomerID) %>%
+                        summarise(Value = sum(Value)) %>%
+                        top_n(15, Value) %>%
+                        arrange(desc(Value))
+
+ggplot(data=top15_customer_val, 
+  aes(x=reorder(CustomerID, 
+                Value, 
+                FUN = sum), 
+     y=Value)) +
+  geom_bar(stat="identity", fill="blue") +
+  coord_flip()
+```
+
+### RFM Model
+
+Now that we have a clear idea of what are the trading volumes from he company. Lets get into the RFM model. We will use the last sale date as the current date.
+
+```{r 19}
+or_data2 <- or_data %>%
+              group_by(CustomerID) %>%
+              summarise(last_pruchase_date = max(InvoiceDate),
+                        frequency = n_distinct(InvoiceDate),
+                        monetary = sum(Value))
+            
+or_data2$current_date <- max(or_data2$last_pruchase_date)
+
+or_data2$recency <- -as.numeric(ymd(or_data2$current_date) - ymd(or_data2$last_pruchase_date))
+```
+
+Once we have recency, frequency and monetary components calculated we will cut them into 5 quantiles.
+
+```{r 20}
+or_data2 <- or_data2 %>%
+              mutate(quantile_recency = ntile(recency, 5),
+                     quantile_frequency = ntile(frequency, 5),
+                     quantile_monetary = ntile(monetary, 5))
+```
+
+Finally we create classes (3-15) by adding the components. This is going to be the final segmentation or clustering of customers.
+
+```{r 22}
+or_data2$class <- or_data2$quantile_recency + or_data2$quantile_frequency + or_data2$quantile_monetary 
+```
+
+We can now check how many customers are in each cluster.
+
+```{r 23}
+or_data_rfm_classes <- or_data2 %>%
+                        group_by(class) %>%
+                        summarise(n_customers = n())
+
+ggplot(or_data_rfm_classes, aes(x="", y=n_customers, fill=class))+
+          geom_bar(width = 1, stat = "identity")+
+          coord_polar("y", start=0)
+```
+
+The recommeded cluster of customers that should get into the loyalty campaign target will be the ones from the highest class.
+
+```{r 25}
+sum(or_data_rfm_classes$class==15)/nrow(or_data_rfm_classes)
+```
+
+By targeting these 7,7% of customers we will ensure that the campaign will be highly efficient.
+
+
+### References
+
+Daqing Chen, Sai Liang Sain, and Kun Guo, Data mining for the online retail industry: A case study of RFM model-based customer segmentation using data mining, Journal of Database Marketing and Customer Strategy Management, Vol. 19, No. 3, pp. 197-208, 2012 (Published online before print: 27 August 2012. doi: 10.1057/dbm.2012.17).
