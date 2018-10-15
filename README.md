@@ -5,7 +5,7 @@ This repo contains some of my own data analysis and machine learning projects ca
 
 ## Online retail data analysis and RFM modelling
 
-* [Test_report](/projects/reports/rmd_test.md). xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+* [Test_report](/online_retailer_RFM.md).
 
 
 ## Binary Classification
