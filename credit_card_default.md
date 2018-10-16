@@ -266,6 +266,8 @@ set.seed(seed)
 fit.glmnet <- train(default~., data=train[lb:ub,], method="glmnet", metric=metric, preProc=c("center", "scale"), trControl=control)
 ```
 
+#### Non-Linear models
+
 Support Vector Machines with Radial Kernel
 
 ``` r
@@ -293,7 +295,7 @@ set.seed(seed)
 fit.rf <- train(default~., data=train[lb:ub,], method="rf", metric=metric, trControl=control)
 ```
 
-Extreme Gradient Boosting
+Extreme Gradient Boosting Trees
 
 ``` r
 lb<-round((nrow(train)*6/7))
@@ -406,203 +408,22 @@ Stack with extreme gradient boosting trees
 ``` r
 set.seed(seed)
 fit.xgbTree_stack <- train(default~., data=train_stack, method="xgbTree", metric=metric, trControl=control)
-print(fit.xgbTree_stack)
 ```
-
-    ## eXtreme Gradient Boosting 
-    ## 
-    ## 21001 samples
-    ##     6 predictor
-    ##     2 classes: 'NNN', 'YYY' 
-    ## 
-    ## No pre-processing
-    ## Resampling: Cross-Validated (7 fold, repeated 2 times) 
-    ## Summary of sample sizes: 18001, 18000, 18001, 18001, 18001, 18001, ... 
-    ## Resampling results across tuning parameters:
-    ## 
-    ##   eta  max_depth  colsample_bytree  subsample  nrounds  logLoss  
-    ##   0.3  1          0.6               0.50        50      0.4115899
-    ##   0.3  1          0.6               0.50       100      0.4102644
-    ##   0.3  1          0.6               0.50       150      0.4104068
-    ##   0.3  1          0.6               0.75        50      0.4112771
-    ##   0.3  1          0.6               0.75       100      0.4104672
-    ##   0.3  1          0.6               0.75       150      0.4103377
-    ##   0.3  1          0.6               1.00        50      0.4113144
-    ##   0.3  1          0.6               1.00       100      0.4100956
-    ##   0.3  1          0.6               1.00       150      0.4099810
-    ##   0.3  1          0.8               0.50        50      0.4107255
-    ##   0.3  1          0.8               0.50       100      0.4104936
-    ##   0.3  1          0.8               0.50       150      0.4107091
-    ##   0.3  1          0.8               0.75        50      0.4110363
-    ##   0.3  1          0.8               0.75       100      0.4103931
-    ##   0.3  1          0.8               0.75       150      0.4104533
-    ##   0.3  1          0.8               1.00        50      0.4108428
-    ##   0.3  1          0.8               1.00       100      0.4102946
-    ##   0.3  1          0.8               1.00       150      0.4102737
-    ##   0.3  2          0.6               0.50        50      0.4045456
-    ##   0.3  2          0.6               0.50       100      0.4025682
-    ##   0.3  2          0.6               0.50       150      0.4022138
-    ##   0.3  2          0.6               0.75        50      0.4035433
-    ##   0.3  2          0.6               0.75       100      0.4007817
-    ##   0.3  2          0.6               0.75       150      0.4001695
-    ##   0.3  2          0.6               1.00        50      0.4037245
-    ##   0.3  2          0.6               1.00       100      0.4006366
-    ##   0.3  2          0.6               1.00       150      0.3991862
-    ##   0.3  2          0.8               0.50        50      0.4032879
-    ##   0.3  2          0.8               0.50       100      0.4021159
-    ##   0.3  2          0.8               0.50       150      0.4022662
-    ##   0.3  2          0.8               0.75        50      0.4023334
-    ##   0.3  2          0.8               0.75       100      0.4001384
-    ##   0.3  2          0.8               0.75       150      0.3996190
-    ##   0.3  2          0.8               1.00        50      0.4028723
-    ##   0.3  2          0.8               1.00       100      0.3990592
-    ##   0.3  2          0.8               1.00       150      0.3980850
-    ##   0.3  3          0.6               0.50        50      0.4019070
-    ##   0.3  3          0.6               0.50       100      0.4035221
-    ##   0.3  3          0.6               0.50       150      0.4064526
-    ##   0.3  3          0.6               0.75        50      0.4004476
-    ##   0.3  3          0.6               0.75       100      0.4011595
-    ##   0.3  3          0.6               0.75       150      0.4034644
-    ##   0.3  3          0.6               1.00        50      0.4002929
-    ##   0.3  3          0.6               1.00       100      0.4002286
-    ##   0.3  3          0.6               1.00       150      0.4009714
-    ##   0.3  3          0.8               0.50        50      0.4007038
-    ##   0.3  3          0.8               0.50       100      0.4031157
-    ##   0.3  3          0.8               0.50       150      0.4068710
-    ##   0.3  3          0.8               0.75        50      0.3994713
-    ##   0.3  3          0.8               0.75       100      0.4008072
-    ##   0.3  3          0.8               0.75       150      0.4035279
-    ##   0.3  3          0.8               1.00        50      0.3990600
-    ##   0.3  3          0.8               1.00       100      0.3984225
-    ##   0.3  3          0.8               1.00       150      0.4005088
-    ##   0.4  1          0.6               0.50        50      0.4112226
-    ##   0.4  1          0.6               0.50       100      0.4107349
-    ##   0.4  1          0.6               0.50       150      0.4110213
-    ##   0.4  1          0.6               0.75        50      0.4112649
-    ##   0.4  1          0.6               0.75       100      0.4108986
-    ##   0.4  1          0.6               0.75       150      0.4110019
-    ##   0.4  1          0.6               1.00        50      0.4114478
-    ##   0.4  1          0.6               1.00       100      0.4106192
-    ##   0.4  1          0.6               1.00       150      0.4105162
-    ##   0.4  1          0.8               0.50        50      0.4113661
-    ##   0.4  1          0.8               0.50       100      0.4109420
-    ##   0.4  1          0.8               0.50       150      0.4107529
-    ##   0.4  1          0.8               0.75        50      0.4111505
-    ##   0.4  1          0.8               0.75       100      0.4107239
-    ##   0.4  1          0.8               0.75       150      0.4108079
-    ##   0.4  1          0.8               1.00        50      0.4106422
-    ##   0.4  1          0.8               1.00       100      0.4103469
-    ##   0.4  1          0.8               1.00       150      0.4100752
-    ##   0.4  2          0.6               0.50        50      0.4039155
-    ##   0.4  2          0.6               0.50       100      0.4031309
-    ##   0.4  2          0.6               0.50       150      0.4041820
-    ##   0.4  2          0.6               0.75        50      0.4028321
-    ##   0.4  2          0.6               0.75       100      0.4020714
-    ##   0.4  2          0.6               0.75       150      0.4030777
-    ##   0.4  2          0.6               1.00        50      0.4034173
-    ##   0.4  2          0.6               1.00       100      0.4004972
-    ##   0.4  2          0.6               1.00       150      0.4006203
-    ##   0.4  2          0.8               0.50        50      0.4030542
-    ##   0.4  2          0.8               0.50       100      0.4028732
-    ##   0.4  2          0.8               0.50       150      0.4046728
-    ##   0.4  2          0.8               0.75        50      0.4028689
-    ##   0.4  2          0.8               0.75       100      0.4017776
-    ##   0.4  2          0.8               0.75       150      0.4023528
-    ##   0.4  2          0.8               1.00        50      0.4019918
-    ##   0.4  2          0.8               1.00       100      0.3996395
-    ##   0.4  2          0.8               1.00       150      0.3998769
-    ##   0.4  3          0.6               0.50        50      0.4031377
-    ##   0.4  3          0.6               0.50       100      0.4079705
-    ##   0.4  3          0.6               0.50       150      0.4123978
-    ##   0.4  3          0.6               0.75        50      0.4018471
-    ##   0.4  3          0.6               0.75       100      0.4058337
-    ##   0.4  3          0.6               0.75       150      0.4097349
-    ##   0.4  3          0.6               1.00        50      0.3999685
-    ##   0.4  3          0.6               1.00       100      0.4020983
-    ##   0.4  3          0.6               1.00       150      0.4050683
-    ##   0.4  3          0.8               0.50        50      0.4032203
-    ##   0.4  3          0.8               0.50       100      0.4091759
-    ##   0.4  3          0.8               0.50       150      0.4144489
-    ##   0.4  3          0.8               0.75        50      0.4006348
-    ##   0.4  3          0.8               0.75       100      0.4045050
-    ##   0.4  3          0.8               0.75       150      0.4095271
-    ##   0.4  3          0.8               1.00        50      0.3989651
-    ##   0.4  3          0.8               1.00       100      0.4013049
-    ##   0.4  3          0.8               1.00       150      0.4050717
-    ## 
-    ## Tuning parameter 'gamma' was held constant at a value of 0
-    ## 
-    ## Tuning parameter 'min_child_weight' was held constant at a value of 1
-    ## logLoss was used to select the optimal model using the smallest value.
-    ## The final values used for the model were nrounds = 150, max_depth = 2,
-    ##  eta = 0.3, gamma = 0, colsample_bytree = 0.8, min_child_weight = 1
-    ##  and subsample = 1.
 
 Stack with random forests
 
 ``` r
 set.seed(seed)
 fit.rf_stack <- train(default~., data=train_stack, method="rf", metric=metric, trControl=control)
-print(fit.rf_stack)
+
 ```
 
-    ## Random Forest 
-    ## 
-    ## 21001 samples
-    ##     6 predictor
-    ##     2 classes: 'NNN', 'YYY' 
-    ## 
-    ## No pre-processing
-    ## Resampling: Cross-Validated (7 fold, repeated 2 times) 
-    ## Summary of sample sizes: 18001, 18000, 18001, 18001, 18001, 18001, ... 
-    ## Resampling results across tuning parameters:
-    ## 
-    ##   mtry  logLoss  
-    ##   2     0.4138572
-    ##   4     0.4168126
-    ##   6     0.4252337
-    ## 
-    ## logLoss was used to select the optimal model using the smallest value.
-    ## The final value used for the model was mtry = 2.
-
-Stack with multivariate adaptive regression splines
+Stack with multivariate adaptive regression splines (MARS)
 
 ``` r
 set.seed(seed)
 fit.earth_stack <- train(default~., data=train_stack, method="earth", metric=metric, trControl=control)
 ```
-
-    ## Loading required package: earth
-
-    ## Loading required package: plotmo
-
-    ## Loading required package: plotrix
-
-    ## Loading required package: TeachingDemos
-
-``` r
-print(fit.earth_stack)
-```
-
-    ## Multivariate Adaptive Regression Spline 
-    ## 
-    ## 21001 samples
-    ##     6 predictor
-    ##     2 classes: 'NNN', 'YYY' 
-    ## 
-    ## No pre-processing
-    ## Resampling: Cross-Validated (7 fold, repeated 2 times) 
-    ## Summary of sample sizes: 18001, 18000, 18001, 18001, 18001, 18001, ... 
-    ## Resampling results across tuning parameters:
-    ## 
-    ##   nprune  logLoss  
-    ##   2       0.4333791
-    ##   4       0.4113319
-    ##   7       0.4108212
-    ## 
-    ## Tuning parameter 'degree' was held constant at a value of 1
-    ## logLoss was used to select the optimal model using the smallest value.
-    ## The final values used for the model were nprune = 7 and degree = 1.
 
 We have now our level 1 and 2 models trained. Lets make predictions now on the out-of-sample dataset for validating the model.
 
@@ -693,7 +514,7 @@ print(confusionMatrix(as.factor(test_predicted), as.factor(test_stack[,1]), posi
     ##        'Positive' Class : YYY             
     ## 
 
-An accuracy of 80.17% has been achieved in out of sample testing. We can see that the models predictions are better than a random guessing and therefore the model it's doing its job!
+An accuracy of over 80% has been achieved in out of sample testing. We can see that the models predictions are better than a random guessing and therefore the model it's doing its job!
 
 ### References
 
