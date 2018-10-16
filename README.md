@@ -1,6 +1,6 @@
 # Data Science Projects
 
-This repo contains some of my own data analysis and machine learning projects carried as a hobby for training and learning purposes.
+This repository contains some of my own data analysis and machine learning projects carried as a hobby for training and learning purposes.
 
 
 ## Data analysis and RFM modelling
