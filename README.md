@@ -6,14 +6,12 @@ This repository contains some of my own data analysis and machine learning proje
 ## Data analysis and RFM modelling
 
 * [Online retail](/online_retailer_RFM.md). 
- 
   Data analysis and clusterinng of customers for a loyalty campaign.
 
 
 ## Binary Classification
 
 * [Default Payments of Credit Card Clients](/credit_card_default.md). 
-
   Over 80% classification accuracy achieved by ensembling multiple predicitive models.
 
 
