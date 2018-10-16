@@ -10,7 +10,7 @@ This repo contains some of my own data analysis and machine learning projects ca
 
 ## Binary Classification
 
-* [Default Payments of Credit Card Clients](/projects/default_payment.r). 80% classification accuracy achieved by ensembling multiple predicitive models.
+* [Default Payments of Credit Card Clients](/credit_card_default.md). 80% classification accuracy achieved by ensembling multiple predicitive models.
 
 
 ## Authors
