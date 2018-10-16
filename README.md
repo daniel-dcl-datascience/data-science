@@ -5,7 +5,7 @@ This repository contains some of my own data analysis and machine learning proje
 
 ## Data analysis and RFM modelling
 
-* [Online retail](/online_retailer_RFM.md). 
+* [Online retail](/online_retailer_RFM.md). \n
   Data analysis and clusterinng of customers for a loyalty campaign.
 
 
