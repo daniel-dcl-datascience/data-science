@@ -31,7 +31,7 @@ X18-X23: Amount of previous payment (NT dollar). X18 = amount paid in September,
 First of all, we set the working directory.
 
 ``` r
-setwd("C:/Users/Daniel Del Castillo/Google Drive/Programacion/Projects/R/Online Retailer/")
+setwd("C:/Projects/R/Online Retailer/")
 ```
 
 Download the online retail dataset.
@@ -39,7 +39,7 @@ Download the online retail dataset.
 ``` r
 url <- "https://archive.ics.uci.edu/ml/machine-learning-databases/00350/default of credit card clients.xls"
 destfile <- "default of credit card clients.xls"
-#download.file(url, destfile, mode="wb")
+download.file(url, destfile, mode="wb")
 ```
 
 Next we read the first sheet from the downloaded xlsx file with readxl.
