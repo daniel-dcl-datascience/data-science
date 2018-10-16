@@ -156,13 +156,6 @@ Next we will create the training (70%) and validation (30%) dataset by a stratif
 ``` r
 seed = 7
 library(caret)
-```
-
-    ## Loading required package: lattice
-
-    ## Loading required package: ggplot2
-
-``` r
 set.seed(seed)
 validation_index <- createDataPartition(dataset$default, 
                                         p=0.7, 
@@ -170,8 +163,6 @@ validation_index <- createDataPartition(dataset$default,
 test <- dataset[-c(validation_index),]
 train <- dataset[validation_index,]
 ```
-
-### Data analysis
 
 Lets take a look at the distribution of the values of the different variables.
 
