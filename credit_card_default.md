@@ -4,7 +4,7 @@ In this end-to-end project we are going to create a machine learning predictive 
 
 ### Data Source
 
-The data is based in a customers credit card dataset from Taiwan.
+The data is based on a customers credit card dataset from Taiwan.
 
 ### Variable information
 
