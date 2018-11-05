@@ -2,6 +2,12 @@
 
 This repository contains some of my own data analysis and machine learning projects carried out for training and learning purposes.
 
+## Deep Learning and NLP
+
+* [Amazon reviews](/amazon_reviews.ipynb). 
+
+  Deep learning with LSTM for customer reviews sentiment analysis.
+
 
 ## Data analysis and RFM modelling
 
