@@ -26,6 +26,7 @@ This repository contains some of my own data analysis and machine learning proje
 ## Authors
 
 * **Daniel Del Castillo Llano** - [daniel-dcl-datascience](https://github.com/daniel-dcl-datascience)
+[linkedIn](www.linkedin.com/in/danieldc)
 
 
 ## License
