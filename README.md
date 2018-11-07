@@ -4,7 +4,7 @@ This repository contains some of my own data analysis and machine learning proje
 
 ## Deep Learning and NLP
 
-* [Amazon reviews](/amazon_reviews.ipynb). 
+* [Amazon reviews](/amazon_reviews_LSTM.ipynb). 
 
   Deep learning with LSTM for customer reviews sentiment analysis.
 
