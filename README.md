@@ -30,6 +30,13 @@ This repository contains some of my own data analysis and machine learning proje
   Automation of machine learning pipelines with Sparklyr (R+dplyr+Spark).
 
 
+## Linear regression with scikit-learn
+
+* [Powerplant energy output prediction](/powerplant-py.R). 
+
+  Prediction of the energy output of a Power Plant.
+
+
 ## Authors
 
 * **Daniel Del Castillo Llano** - [daniel-dcl-datascience](https://github.com/daniel-dcl-datascience)
