@@ -23,6 +23,13 @@ This repository contains some of my own data analysis and machine learning proje
   Over 80% classification accuracy achieved by ensembling multiple predicitive models.
 
 
+## Distributed Logistic Regression with Apache Spark Pipelines
+
+* [Powerplant energy output classification](/powerplant_spark.R). 
+
+  Automation of machine learning pipelines with Sparklyr (R+dplyr+Spark).
+
+
 ## Authors
 
 * **Daniel Del Castillo Llano** - [daniel-dcl-datascience](https://github.com/daniel-dcl-datascience)
